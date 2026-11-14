@@ -1,5 +1,5 @@
 name: Suggest a cache method or model
-description: Request a method, an additional checkpoint, or a correction to a method page.
+description: Request a method, an additional checkpoint or model family, a measured result, or a correction to a method page.
 title: "[Method] "
 labels: ["enhancement"]
 body:
@@ -9,8 +9,19 @@ body:
       label: What would you like to contribute?
       options:
         - Add a cache method
-        - Support a method on another model
+        - Support a method on another model or model family
         - Add or correct an upstream example
+        - Contribute a measured result
+    validations:
+      required: true
+  - type: dropdown
+    id: family
+    attributes:
+      label: Model family
+      options:
+        - Bidirectional masked diffusion (LLaDA, Dream)
+        - Block diffusion (SDAR, Fast-dLLM v2, LLaDA2)
+        - Other or unsure
     validations:
       required: true
   - type: input
@@ -24,7 +35,7 @@ body:
     id: evidence
     attributes:
       label: Primary evidence
-      description: Link the paper, the authors' example or implementation revision, and any license you found.
+      description: Link the paper, the authors' example or implementation revision, and any license you found. Say whether the method ships with its own decoding rule.
     validations:
       required: true
   - type: textarea
