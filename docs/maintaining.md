@@ -2,7 +2,7 @@
 
 ## A one-person workflow
 
-Track the next usable method or model configuration in Issues. Work on one integration at a time, and update the method page alongside it. A team should be able to adopt an integrated method as soon as its example works. Measurements and support for another checkpoint can follow independently. [First release target](project.md#proposed-first-release)
+Track the next usable method or model configuration in Issues. Work on one integration at a time, and update the method page alongside it. A working reference is useful to researchers. Recommend a serving configuration once its measured workload, deployment limits and rollback procedure are published. [First release target](project.md#proposed-first-release) · [Serving validation](serving.md)
 
 | When | Maintainer action |
 | --- | --- |

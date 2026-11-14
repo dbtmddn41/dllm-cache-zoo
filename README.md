@@ -2,7 +2,7 @@
 
 A collection of **KV cache methods for diffusion language models**. The goal is to select a method by name inside the generation loop you already use. A model- and runtime-specific adapter will handle the cache updates while your sampler chooses which tokens to reveal.
 
-**The collection is in development.** The examples below run in the authors’ repositories. The first proposed Zoo adapter targets LLaDA's PyTorch denoising loop with a checkpoint loaded through Transformers. [Integration design](docs/project.md)
+**The collection is in development.** The examples below run in the authors’ repositories. The first proposed serving target is Fast-dLLM Prefix on LLaDA-8B-Instruct, checked against a PyTorch reference and evaluated under concurrent HTTP traffic. [Integration design](docs/project.md) · [Serving validation plan](docs/serving.md)
 
 ## Method zoo
 

@@ -6,7 +6,7 @@ Use this protocol when reporting the effect of switching cache methods in the Zo
 
 1. Pin the model, tokenizer, dataset split and revision, prompt template, and scoring rule. Save an ordered list of example IDs and seeds. For a small pilot, publish the subset and its size alongside the score.
 2. Use the same device, dtype, attention implementation, batch size, maximum generation length, block length, denoising budget, token-transfer rule, sampling parameters, and stopping rule. Record the actual steps and generated lengths. If confidence-based parallel decoding is also under study, give that change a separate comparison.
-3. Warm up each configuration, then measure identical batches under the same timing boundaries. Alternate run order across repeats, synchronize the device at both boundaries, and reset the cache between independent requests. Record the number of warm-ups and measured repeats.
+3. For isolated model timings, warm up each configuration, measure identical batches, and synchronize the device at the timing boundaries. Alternate run order across repeats and isolate cache state between independent requests. For concurrent serving, timestamp requests at the client and leave the worker's asynchronous execution intact. Record warm-ups and measured repeats.
 4. Save per-example outputs and per-batch timing before computing aggregates. Include timeouts, out-of-memory errors, and extraction failures with their IDs. Report how many examples completed in each arm.
 
 ## Read the numbers
@@ -31,3 +31,5 @@ Lower latency can accompany shorter generations or a lower answer score. Present
 | Published comparison | Baseline and policy summaries, sample count, variability across repeats, raw records or a durable artifact link, and instructions to reconstruct the table |
 
 Before publishing, replay the baseline from the recorded settings, check the all-refresh configuration against it, and inspect examples whose scores changed. Preserve the original result when adding a correction or a run with different hardware.
+
+For a deployment claim, also report client-observed tail latency, deadline goodput per GPU, quality, memory and errors under the declared arrival pattern. Publish the stock server, adapter-off and cache-on results together. [Serving workload and release criteria](serving.md#decide-whether-to-enable-it)
