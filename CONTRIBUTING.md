@@ -12,15 +12,9 @@ The smallest contribution is one row in the catalog. Give the paper version, a d
 2. Add a variant to its family page or create a page under `docs/methods/`. Follow the Fast-dLLM page as an example. Describe what gets reused, how to select the method, the settings that affect behavior, and any sampler or batch-size requirement. If the method ships with its own decoding rule, say which settings belong to the cache and which to decoding. Link the paper, a pinned implementation, an example for the exact checkpoint, and its license evidence. [Example method page](docs/methods/fast-dllm.md)
 3. Link the variant in the README and the example in the [checkpoint index](docs/methods.md) under its model family. A link to an author-maintained implementation belongs in an upstream example column. A Zoo integration should link its method, host-side example, configuration, tested host, and checkpoint revision.
 
-## Propose a policy or an adapter
+## Take part in the design
 
-In the planned library, a method is a policy and each model family has an adapter. A policy proposal states which positions the method recomputes between refreshes, when it refreshes, which signals it reads, and what state it stores. Add a row to the design table with those four answers. An adapter proposal points to the host loop or native hook that provides the step information, describes what the adapter must read or update, and explains how a user switches back to the baseline. [How published methods fit](docs/project.md#how-published-methods-fit) · [Hosts](docs/project.md#hosts)
-
-Write a policy from the paper when the reference code has no license that permits reuse, and say so on the method page. When code is adapted from a licensed source, keep its notice and link the revision.
-
-## Contribute a measured result
-
-Measured comparisons can be contributed independently of code. Follow the comparison protocol, name the decoding condition, and attach the run manifest and raw records. A result that differs from a paper is welcome when the settings are stated. [Comparison protocol](docs/benchmarking.md)
+The library's interface is still being designed. A proposal for a cache policy or a model adapter is welcome before any code lands, and so is a measured comparison. The design notes say what each should contain. [Propose a policy or an adapter](docs/design/README.md#propose-a-policy-or-an-adapter) · [Contribute a measured result](docs/design/README.md#contribute-a-measured-result) · [Roadmap](docs/design/roadmap.md)
 
 ## Set up a working copy
 
@@ -41,4 +35,4 @@ npx --yes markdownlint-cli2@0.24.0 '*.md' 'docs/**/*.md' '.github/**/*.md'
 lychee --offline --include-fragments '*.md' 'docs/**/*.md' '.github/**/*.md'
 ```
 
-Open a pull request for a ready edit or use the method proposal form to discuss scope. [Issue forms](https://github.com/dbtmddn41/dllm-cache-zoo/issues/new/choose) · [Maintainer workflow](docs/maintaining.md)
+Open a pull request for a ready edit or use the method proposal form to discuss scope. [Issue forms](https://github.com/dbtmddn41/dllm-cache-zoo/issues/new/choose) · [Maintainer workflow](docs/design/maintaining.md)

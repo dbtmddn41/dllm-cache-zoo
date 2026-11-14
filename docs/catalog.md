@@ -8,7 +8,7 @@ Last survey: 14 November 2026. A dash in the code column means the abstract link
 
 ## Selective recomputation on bidirectional models
 
-These methods decide which positions to recompute at a denoising step, or when to refresh, on LLaDA and Dream style models. They are the closest fit to the policy interface. [How published methods fit](project.md#how-published-methods-fit)
+These methods decide which positions to recompute at a denoising step, or when to refresh, on LLaDA and Dream style models. They are the closest fit to the policy interface. [How published methods fit](design/library.md#how-published-methods-fit)
 
 | Method | Cache component | Models | Code and license |
 | --- | --- | --- | --- |
@@ -66,7 +66,7 @@ These methods build on the block cache of a block diffusion model. [Block diffus
 
 ## Caches shared across requests
 
-These methods reuse states between requests that share a span of text. They matter most in serving. [Serving integration](serving.md)
+These methods reuse states between requests that share a span of text. They matter most in serving. [Serving integration](design/serving.md)
 
 | Method | Cache component | Models | Code and license |
 | --- | --- | --- | --- |
@@ -75,7 +75,7 @@ These methods reuse states between requests that share a span of text. They matt
 
 ## What the catalog leaves out
 
-The catalog lists methods that store, select or skip model states at inference time without training. The same survey found related work that falls outside that line. Decoding rules and speculative decoding stay with the host, for example Fast-dLLM++. Models built on causal attention so that a standard prefix cache applies are checkpoints, for example WeDLM. Cache quantization and memory planning are separate topics, for example dLLM-KVQ and Mosaic. [Scope](project.md#scope) · [Fast-dLLM++](https://arxiv.org/abs/2606.02955v3) · [WeDLM](https://arxiv.org/abs/2512.22737v1) · [dLLM-KVQ](https://arxiv.org/abs/2610.39853v1) · [Mosaic](https://arxiv.org/abs/2601.06562v2)
+The catalog lists methods that store, select or skip model states at inference time without training. The same survey found related work that falls outside that line. Decoding rules and speculative decoding stay with the host, for example Fast-dLLM++. Models built on causal attention so that a standard prefix cache applies are checkpoints, for example WeDLM. Cache quantization and memory planning are separate topics, for example dLLM-KVQ and Mosaic. [Scope](design/roadmap.md#scope) · [Fast-dLLM++](https://arxiv.org/abs/2606.02955v3) · [WeDLM](https://arxiv.org/abs/2512.22737v1) · [dLLM-KVQ](https://arxiv.org/abs/2610.39853v1) · [Mosaic](https://arxiv.org/abs/2601.06562v2)
 
 ## Keep the catalog current
 

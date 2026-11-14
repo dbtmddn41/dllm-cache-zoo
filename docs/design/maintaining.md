@@ -2,7 +2,7 @@
 
 ## A one-person workflow
 
-The unit of work is one supported pair: a method on a checkpoint, with its example and evidence. Track the next pair in Issues. Work on one pair at a time, and update the method page alongside it. A working, checked entry is what people come to a zoo for. Follow the roadmap order, and move a later item forward only when a user asks for it with a concrete checkpoint. [Roadmap](project.md#roadmap) · [Comparison protocol](benchmarking.md)
+The unit of work is one supported pair: a method on a checkpoint, with its example and evidence. Track the next pair in Issues. Work on one pair at a time, and update the method page alongside it. A working, checked entry is what people come to a zoo for. Follow the roadmap order, and move a later item forward only when a user asks for it with a concrete checkpoint. [Roadmap](roadmap.md) · [Comparison protocol](benchmarking.md)
 
 | When | Maintainer action |
 | --- | --- |
@@ -12,7 +12,7 @@ The unit of work is one supported pair: a method on a checkpoint, with its examp
 | When a method or checkpoint is released | Add it to the catalog with its paper, pinned revision and license. Note whether it bundles a decoding rule and which model family it targets. Prompt support for a new release is how people find the Zoo, so prefer a small, correct entry within days over a complete one later. |
 | Monthly | Review grouped dependency proposals and prioritize reproducibility reports. Repeat the catalog survey for new cache methods and block diffusion checkpoints, and update the survey date. Check which pairs teams have asked for or linked from downstream repositories. Stars and clones are useful signals of discovery. A reported reproduction or downstream use helps choose what to maintain. |
 
-GitHub Actions checks the Markdown and its local links and installs the locked development environment on Linux. Dependabot proposes grouped monthly updates for actions and Python development dependencies. Once model code exists, the planned PR checks add Ruff, mypy, and pytest on CPU. A GPU run belongs with changes that can affect model behavior, and can be reused to produce the release evidence. [Method catalog](catalog.md#keep-the-catalog-current)
+GitHub Actions checks the Markdown and its local links and installs the locked development environment on Linux. Dependabot proposes grouped monthly updates for actions and Python development dependencies. Once model code exists, the planned PR checks add Ruff, mypy, and pytest on CPU. A GPU run belongs with changes that can affect model behavior, and can be reused to produce the release evidence. [Method catalog](../catalog.md#keep-the-catalog-current)
 
 ## Releasing an integration
 
@@ -24,4 +24,4 @@ GitHub Actions checks the Markdown and its local links and installs the locked d
 
 Each integrated method should have one page a team can send to a colleague. Include the minimal example, the checkpoint it works with, and a matched baseline result when available. Credit the method authors alongside the implementation.
 
-Before publishing a measured result, send the method's authors the result, the settings and the reproduction command, and ask whether the configuration is the one they would choose. Record their reply or the lack of one on the method page. An author who confirms their entry is also the most likely person to contribute the next method. Once the Zoo covers both model families, describe the policy formulation and the matched comparison in a technical report so the Zoo can be cited as a whole. [Citation metadata](../CITATION.cff) · [Contribution guide](../CONTRIBUTING.md)
+Before publishing a measured result, send the method's authors the result, the settings and the reproduction command, and ask whether the configuration is the one they would choose. Record their reply or the lack of one on the method page. An author who confirms their entry is also the most likely person to contribute the next method. Once the Zoo covers both model families, describe the policy formulation and the matched comparison in a technical report so the Zoo can be cited as a whole. [Citation metadata](../../CITATION.cff) · [Contribution guide](../../CONTRIBUTING.md)

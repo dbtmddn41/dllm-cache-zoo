@@ -1,12 +1,12 @@
 # Comparing cache policies
 
-Use this protocol when reporting the effect of switching cache methods. The Zoo uses it for the results it publishes with each entry. For example, on LLaDA-8B-Instruct a team can compare full recomputation, prefix caching, and dual caching on the same GSM8K questions. Each cache run shares the baseline's prompts and decoding rule. [LLaDA model](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) · [GSM8K dataset and answer format](https://github.com/openai/grade-school-math) · [Fast-dLLM settings](methods/fast-dllm.md#select-a-variant-upstream)
+Use this protocol when reporting the effect of switching cache methods. The Zoo uses it for the results it publishes with each entry. For example, on LLaDA-8B-Instruct a team can compare full recomputation, prefix caching, and dual caching on the same GSM8K questions. Each cache run shares the baseline's prompts and decoding rule. [LLaDA model](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) · [GSM8K dataset and answer format](https://github.com/openai/grade-school-math) · [Fast-dLLM settings](../methods/fast-dllm.md#select-a-variant-upstream)
 
 ## What a result reports
 
-A result covers one method on one checkpoint revision under one decoding condition, measured under this protocol. A paper's reported result sits beside it as a separately attributed entry with its original setup. A method and checkpoint pair that has not been run says so. [Method table](../README.md#method-zoo)
+A result covers one method on one checkpoint revision under one decoding condition, measured under this protocol. A paper's reported result sits beside it as a separately attributed entry with its original setup. A method and checkpoint pair that has not been run says so. [Method table](../../README.md#method-zoo)
 
-The baseline depends on the model family. For a bidirectional model it is full recomputation. For a block diffusion model it is the block cache, once that cache has been checked against a run with no cache on the same checkpoint. [Model families](../README.md#model-families) · [Block cache](methods/block-diffusion.md#block-cache)
+The baseline depends on the model family. For a bidirectional model it is full recomputation. For a block diffusion model it is the block cache, once that cache has been checked against a run with no cache on the same checkpoint. [Model families](../../README.md#model-families) · [Block cache](../methods/block-diffusion.md#block-cache)
 
 ## Hold decoding fixed
 
@@ -17,7 +17,7 @@ Several methods ship with a decoding rule of their own, such as confidence-aware
 | Cache only | Full recomputation with the host's decoding rule | The same decoding rule, with the cache as the only change |
 | As published | Full recomputation with the model's reference decoding | The authors’ full recipe, including their decoding rule |
 
-Cache only is the primary result, because it attributes the change to the cache. As published shows what the authors’ recipe delivers as a whole. If a method cannot run apart from its decoding rule, report the second condition alone and say why. [How methods bundle decoding](project.md#how-published-methods-fit)
+Cache only is the primary result, because it attributes the change to the cache. As published shows what the authors’ recipe delivers as a whole. If a method cannot run apart from its decoding rule, report the second condition alone and say why. [How methods bundle decoding](library.md#how-published-methods-fit)
 
 ## Pair the runs
 

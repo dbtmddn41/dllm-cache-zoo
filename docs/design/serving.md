@@ -1,6 +1,6 @@
 # Serving integration
 
-A method from the Zoo can also run inside an inference engine that teams already deploy. This page describes how to carry a checked method into such an engine and how to show under load whether it should be enabled. The work follows the installable release in the roadmap. The Zoo builds no server of its own. The engine keeps its HTTP API, scheduler and batching, and a product team enables the method in worker configuration. The target GPU model, traffic mix, quality tolerance, and response deadline depend on the product. [Roadmap](project.md#roadmap)
+A method from the Zoo can also run inside an inference engine that teams already deploy. This page describes how to carry a checked method into such an engine and how to show under load whether it should be enabled. The work follows the installable release in the roadmap. The Zoo builds no server of its own. The engine keeps its HTTP API, scheduler and batching, and a product team enables the method in worker configuration. The target GPU model, traffic mix, quality tolerance, and response deadline depend on the product. [Roadmap](roadmap.md)
 
 ## Choose an engine that runs the checkpoint
 

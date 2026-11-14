@@ -6,7 +6,7 @@ A block diffusion model generates one block at a time and limits attention so th
 
 SDAR's generation script writes the prompt blocks into the cache first. Each denoising step then runs only the active block against the cache. When a block has no masks left, one more pass stores its keys and values. Research dLLM implements the same idea as `BlockdCache`, which its documentation calls an exact KV cache. It stores states by absolute position and refreshes a finished block together with the next block, so it needs no separate storing pass. dInfer's LLaDA2 recipes select its prefix cache together with block diffusion decoding. [SDAR generation loop](https://github.com/JetAstra/SDAR/blob/4c2749ba103448f45520e8411533710a1e66574d/generate.py#L58-L202) · [Research dLLM `BlockdCache`](https://github.com/Kamichanw/d2Cache/blob/79fb5f64864389ba093c29122a21ef0391080312/docs/kv_caching.md#L136-L159) · [dInfer LLaDA2 recipes](https://github.com/inclusionAI/dInfer/blob/1ffeb961cd258bede74fcf5ca8a416ae6d57b18f/README.md#L116-L150)
 
-In the Zoo, the block cache is the baseline for this family. Check it against a run with no cache on the same checkpoint before measuring anything else, and record the tolerance used. [Comparison protocol](../benchmarking.md#pair-the-runs)
+In the Zoo, the block cache is the baseline for this family. Check it against a run with no cache on the same checkpoint before measuring anything else, and record the tolerance used. [Comparison protocol](../design/benchmarking.md#pair-the-runs)
 
 ## Fast-dLLM v2 sub-block cache
 

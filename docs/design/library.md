@@ -1,6 +1,6 @@
 # Library design
 
-The planned library separates **which positions to recompute** from **how the model recomputes them**. A cache method is a policy that names the positions to refresh at a denoising step. A model adapter runs the model on those positions and serves the rest from stored states. The host keeps its own generation loop: it loads the checkpoint, selects tokens, streams output if needed, and decides when to stop. A benchmark uses the same integration as a downstream application. Until the first milestone lands, the method pages link to the authors’ implementations.
+The planned library separates **which positions to recompute** from **how the model recomputes them**. A cache method is a policy that names the positions to refresh at a denoising step. A model adapter runs the model on those positions and serves the rest from stored states. The host keeps its own generation loop: it loads the checkpoint, selects tokens, streams output if needed, and decides when to stop. A benchmark uses the same integration as a downstream application. Until the first milestone lands, the method pages link to the authors’ implementations. [Roadmap](roadmap.md) · [All design notes](README.md)
 
 ## Who it is for
 
@@ -26,22 +26,22 @@ The Zoo is for anyone who runs a diffusion language model and wants to reuse com
 
 | Method | Recomputed between refreshes | Refresh | Signal the policy reads | Stored state |
 | --- | --- | --- | --- | --- |
-| [Fast-dLLM Prefix](methods/fast-dllm.md#prefix-cache) | Active block and suffix | At each new block | Block bounds | Keys and values |
-| [Fast-dLLM Dual](methods/fast-dllm.md#dual-cache) | Active block | At each new block | Block bounds | Keys and values, written by position |
-| [dKV-Cache Decode](methods/dkv-cache.md#decode) | Masked positions and those decoded on the previous step | Fixed interval | Mask state | Keys and values |
-| [dKV-Cache Greedy](methods/dkv-cache.md#greedy) | Positions just decoded, due next, and optionally nearby masks | Fixed interval | Unmasking order sampled up front | Keys and values |
-| [dLLM-Cache](methods/dllm-cache.md) | Response positions whose value features changed most | Separate fixed intervals for prompt and response | Value-feature similarity | Layer features, including attention and MLP outputs |
-| [d²Cache](methods/d2cache.md) | Masked positions picked by certainty, plus positions picked by attention rollout | Chosen at every step | Attention weights | Keys and values |
-| [Elastic-Cache](methods/elastic-cache.md) | Sliding window of masked positions | When attention on the most-attended tokens drifts past a threshold, starting from deeper layers | Attention weights | Keys and values |
-| [Block cache](methods/block-diffusion.md#block-cache) | Active block | When a block completes | Block bounds | Keys and values of completed blocks |
-| [Fast-dLLM v2 Sub-block](methods/block-diffusion.md#fast-dllm-v2-sub-block-cache) | Active sub-block | While the sub-block's first position is still masked | Sub-block bounds | Keys and values for completed blocks and for the active block |
+| [Fast-dLLM Prefix](../methods/fast-dllm.md#prefix-cache) | Active block and suffix | At each new block | Block bounds | Keys and values |
+| [Fast-dLLM Dual](../methods/fast-dllm.md#dual-cache) | Active block | At each new block | Block bounds | Keys and values, written by position |
+| [dKV-Cache Decode](../methods/dkv-cache.md#decode) | Masked positions and those decoded on the previous step | Fixed interval | Mask state | Keys and values |
+| [dKV-Cache Greedy](../methods/dkv-cache.md#greedy) | Positions just decoded, due next, and optionally nearby masks | Fixed interval | Unmasking order sampled up front | Keys and values |
+| [dLLM-Cache](../methods/dllm-cache.md) | Response positions whose value features changed most | Separate fixed intervals for prompt and response | Value-feature similarity | Layer features, including attention and MLP outputs |
+| [d²Cache](../methods/d2cache.md) | Masked positions picked by certainty, plus positions picked by attention rollout | Chosen at every step | Attention weights | Keys and values |
+| [Elastic-Cache](../methods/elastic-cache.md) | Sliding window of masked positions | When attention on the most-attended tokens drifts past a threshold, starting from deeper layers | Attention weights | Keys and values |
+| [Block cache](../methods/block-diffusion.md#block-cache) | Active block | When a block completes | Block bounds | Keys and values of completed blocks |
+| [Fast-dLLM v2 Sub-block](../methods/block-diffusion.md#fast-dllm-v2-sub-block-cache) | Active sub-block | While the sub-block's first position is still masked | Sub-block bounds | Keys and values for completed blocks and for the active block |
 
 This table is the working hypothesis for the interface. It is drawn from the papers and pinned code, and the first milestone tests it by running the first five rows on one adapter. Four points need a decision during that work:
 
 - **Stored state varies.** Most methods store keys and values. dLLM-Cache also reuses attention and MLP outputs, so the adapter needs a second storage point per layer.
 - **Signals have a cost.** A policy that reads attention weights can rule out a fused attention kernel. Research dLLM requires eager attention for d²Cache. A policy declares its signals, and an adapter rejects a combination it cannot serve. [d²Cache attention requirement](https://github.com/Kamichanw/d2Cache/blob/79fb5f64864389ba093c29122a21ef0391080312/docs/kv_caching.md#L133-L134)
 - **Some methods bundle a decoding rule.** Fast-dLLM adds confidence-aware parallel decoding, d²Cache adds certainty-prior decoding, and Elastic-Cache decodes inside a sliding window. The Zoo implements the cache. The decoding rule stays in the host, and each example and result names the one used. [Decoding conditions](benchmarking.md#hold-decoding-fixed)
-- **Some methods choose the context.** The table covers nine variants, and the catalog lists many more. Eviction and sparse attention methods decide which stored entries a query reads. Suffix pruning methods decide which masked positions enter the forward pass. A policy for those methods names positions to keep and positions to drop, beside positions to recompute. Design the interface so this can be added without changing the policies of the first two milestones. [Method catalog](catalog.md)
+- **Some methods choose the context.** The table covers nine variants, and the catalog lists many more. Eviction and sparse attention methods decide which stored entries a query reads. Suffix pruning methods decide which masked positions enter the forward pass. A policy for those methods names positions to keep and positions to drop, beside positions to recompute. Design the interface so this can be added without changing the policies of the first two milestones. [Method catalog](../catalog.md)
 
 Research dLLM already structures its caches as hooks around the model forward, attention and feed-forward calls, with callbacks at step and block boundaries. Keep the Zoo's policy interface close enough that a method written for one can be ported to the other. [Research dLLM cache base class](https://github.com/Kamichanw/d2Cache/blob/79fb5f64864389ba093c29122a21ef0391080312/src/cache/base.py#L165-L394)
 
@@ -73,23 +73,3 @@ For **Fast-dLLM Dual**, the first step of a block runs on the whole sequence. Su
 The Zoo ships no models and no samplers. The first adapters target the model classes in the dLLM library, which loads LLaDA, Dream and LLaDA2 behind one sampler interface. Its Fast-dLLM pipeline shows the cost an adapter is meant to remove: a separate modeling file for each model, and a sampler whose `use_cache` setting selects prefix or dual. Keep the dLLM dependency inside the adapter. A host that loads the same checkpoint through Transformers should be able to use the same policies. [Sampler interface](https://github.com/ZHZisZZ/dllm/blob/ca176752fbceec49c6b4777a2c18ae88e4eb10ed/dllm/core/samplers/base.py#L21-L51) · [Fast-dLLM sampler settings](https://github.com/ZHZisZZ/dllm/blob/ca176752fbceec49c6b4777a2c18ae88e4eb10ed/dllm/pipelines/fastdllm/llada/sampler.py#L156-L177) · [LLaDA2 sampler](https://github.com/ZHZisZZ/dllm/blob/ca176752fbceec49c6b4777a2c18ae88e4eb10ed/dllm/pipelines/llada2/sampler.py#L95-L230)
 
 An adapter may use a native hook when it exposes the required information in time. For example, Dream's published `diffusion_generate` loop calls the model **before** its logits hook. Skipping computation on that step requires an integration at or before the forward call. [Dream sampling loop](https://huggingface.co/Dream-org/Dream-v0-Instruct-7B/blob/05334cb9faaf763692dcf9d8737c642be2b2a6ae/generation_utils.py#L408-L415)
-
-## Scope
-
-| In or out | What |
-| --- | --- |
-| Implemented | Caches that need no training and act at inference time, on bidirectional masked diffusion models and on block diffusion models. |
-| Catalogued for later | Cache eviction, sparse attention, suffix pruning, and caches shared across requests. They enter the Zoo once the policy interface covers context selection. |
-| Left to the host | Decoding strategies such as parallel decoding, remasking rules and unmasking orders. The host provides them, and each example and result names the one used. |
-| Out of scope | Methods that require training or fine-tuning, quantization, and a serving engine of the Zoo's own. Block diffusion checkpoints are used as released. |
-
-Advertise support for a **method, model revision, and host** together. Each supported combination should link the method's paper and implementation revision, applicable license notices, a minimal host-side example, a reusable configuration, and the checks run on that path. Report sampler restrictions before inference and link matched measurements when available. [Example of a sampler restriction](methods/dkv-cache.md#greedy)
-
-## Roadmap
-
-The methods named in the first two milestones were chosen to prove the interface on both model families. The Zoo is meant to hold many more. The catalog lists the published methods found so far, and after the release they move into the Zoo one at a time. [Method catalog](catalog.md)
-
-1. **One model, one interface.** Keep the LLaDA-8B-Instruct PyTorch loop as the correctness reference for full recomputation, Fast-dLLM Prefix, Fast-dLLM Dual, dKV-Cache Decode and dLLM-Cache. Compare each cached variant to the authors’ implementation at its pinned revision. The milestone is met when these policies share one adapter with no method-specific model code, and each has a result measured under the comparison protocol. The pinned dKV-Cache revision has no license file, so its policy is written from the paper. [Upstream variants](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/chat.py#L49-L56) · [dKV-Cache license note](methods/dkv-cache.md#select-a-variant-upstream)
-2. **A second family and newer methods.** Add a block diffusion checkpoint with its block cache as that family's baseline. SDAR-8B-Chat is the first candidate, with LLaDA2.0-mini next. Bring d²Cache and Elastic-Cache to the LLaDA adapter. Then test which approximate policies still save work inside an active block. [Block diffusion caches](methods/block-diffusion.md) · [Checkpoints](methods.md#block-diffusion)
-3. **An installable release.** Publish the package with a support table of method and checkpoint pairs. Each pair has a host-side example, a configuration and measured results with their raw records. Ask each method's authors to review their entry. From here a new method is one policy file, one configuration and one measured entry. Work through the catalog in that form, starting with methods whose code carries a license. A technical report on the policy formulation can follow so the Zoo can be cited as a whole. [Maintaining the Zoo](maintaining.md)
-4. **Serving integration.** Carry one method into an engine that teams already deploy, and validate it under load. [Serving integration](serving.md)
