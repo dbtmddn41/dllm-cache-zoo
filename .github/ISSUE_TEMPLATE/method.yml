@@ -1,0 +1,36 @@
+name: Suggest a cache policy
+description: Propose a source-backed catalog entry or a model integration.
+title: "[Method] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: scope
+    attributes:
+      label: What would you like to contribute?
+      options:
+        - Catalog reference
+        - Model integration proposal
+        - Correction to an existing entry
+    validations:
+      required: true
+  - type: input
+    id: policy
+    attributes:
+      label: Policy and model
+      placeholder: e.g. Fast-dLLM v1 prefix on LLaDA-8B-Instruct
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Primary evidence
+      description: Link the paper, official code revision if available, and any license you found.
+    validations:
+      required: true
+  - type: textarea
+    id: use
+    attributes:
+      label: Reuse rule or use case
+      description: What state does it reuse, or what comparison would this enable for your project?
+    validations:
+      required: true

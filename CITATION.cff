@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Please cite dLLM Cache Zoo and the original papers for the policies you use."
+title: "dLLM Cache Zoo"
+type: software
+authors:
+  - name: "dLLM Cache Zoo contributors"
+repository-code: "https://github.com/dbtmddn41/dllm-cache-zoo"
+license: Apache-2.0

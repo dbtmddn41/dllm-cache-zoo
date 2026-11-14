@@ -1,0 +1,18 @@
+name: Report a documentation or reproduction issue
+description: Point to a claim, link, or result that another reader can check.
+title: "[Report] "
+labels: ["bug"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Entry, revision, or result link
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: Observed and expected behavior
+      description: For documentation, include the source for the correction. For a run, include the command, environment, and example ID.
+    validations:
+      required: true
