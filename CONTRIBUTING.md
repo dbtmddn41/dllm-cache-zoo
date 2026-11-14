@@ -1,14 +1,14 @@
 # Contributing
 
-Contributions can bring a new cache method into the Zoo or add a model configuration to an existing method. During the design phase, a concrete upstream example helps us work out what the shared interface must support.
+Contributions can bring a new cache method into the Zoo or connect an existing method to another model or inference runtime. During the design phase, a concrete upstream example helps identify the denoising step or model operation where the method can attach.
 
 ## Add or correct a method
 
 1. Check the [method table](README.md#method-zoo) for the family and variant. Start from a concrete combination, such as dKV-Cache-Decode on LLaDA-8B-Instruct.
 2. Add a variant to its family page or create a page under `docs/methods/`. Follow the Fast-dLLM page as an example. Describe what gets reused, how to select the method, the settings that affect behavior, and any sampler or batch-size requirement. Link the paper, a pinned implementation, an example for the exact checkpoint, and its license evidence. [Example method page](docs/methods/fast-dllm.md)
-3. Link the variant in the README and the example in the [checkpoint index](docs/methods.md). A link to an author-maintained implementation belongs in an upstream example column. A Zoo integration should link its own importable method, example configuration, and tested checkpoint.
+3. Link the variant in the README and the example in the [checkpoint index](docs/methods.md). A link to an author-maintained implementation belongs in an upstream example column. A Zoo integration should link its method, host-side example, configuration, tested runtime, and checkpoint revision.
 
-For an integration proposal, describe how a team would switch from the baseline to your method in its existing pipeline. If the method needs a different sampler or a model-specific hook, say where the change occurs. Measured comparisons can be contributed independently. [Library design](docs/project.md) · [Benchmark protocol](docs/benchmarking.md)
+For an integration proposal, point to the host loop or native hook that provides the required step information. Describe what the adapter must read or update, which sampler settings it requires, and how a user can switch back to the baseline. Measured comparisons can be contributed independently. [Library design](docs/project.md) · [Benchmark protocol](docs/benchmarking.md)
 
 ## Set up a working copy
 

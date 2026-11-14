@@ -1,29 +1,27 @@
 # Library design
 
-The Zoo will ship implementations of named KV cache methods for diffusion language models. A team should be able to discover the methods available for its checkpoint, load one into its existing generation script, and switch to a second method by changing the selection. Today's directory points to the authors’ implementations. The behaviors below describe the intended library.
+The planned library exposes cache methods by name. A team plugs a method into the denoising loop it already uses. The host loads the checkpoint, selects tokens, streams output if needed, and decides when to stop. A benchmark can use the same integration as a downstream application. The current method pages link to the authors’ implementations.
 
-## What a researcher should be able to do
+## What changes in a LLaDA script
 
-Suppose a team already runs prompts through LLaDA-8B-Instruct. It first selects full recomputation, then Fast-dLLM prefix caching, then dual caching. Across all three runs it keeps its model, prompt formatting, generation settings, and scoring code. The method selection determines which positions are recomputed. The team can save that choice and its parameters with its experiment, or import the same method into a different project.
+LLaDA's example loads its checkpoint with Transformers, then calls a standalone PyTorch generation function. Inside that function, each denoising step knows the active block and mask before it calls the model. This is a concrete place to integrate a cache. [Checkpoint loading and generation call](https://github.com/ML-GSAI/LLaDA/blob/9182493720ed723ef8031210d85959364e51cbe0/generate.py#L233-L261) · [Denoising step](https://github.com/ML-GSAI/LLaDA/blob/9182493720ed723ef8031210d85959364e51cbe0/generate.py#L138-L159)
 
-| Operation | What the library should provide |
+In the proposed integration, the application selects a method for its LLaDA adapter. The loop opens cache state for the request and passes the block bounds and token positions to the adapter at the model call. The adapter returns logits aligned to the positions the host sampler expects. The sampler chooses which tokens to reveal. Switching between compatible methods changes one setting after this initial integration.
+
+For **Fast-dLLM Dual**, the first step of a block runs on the whole sequence. Subsequent steps send only the active block through the model and replace the corresponding positions in each layer's cache. Transformers exposes KV storage through `past_key_values` on compatible models. To reproduce Dual, the adapter also needs the active block bounds, a shorter forward pass, and indexed KV writes. [Fast-dLLM generation loop](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/generate.py#L232-L272) · [Attention update](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/model/modeling_llada.py#L730-L754) · [Transformers cache API](https://huggingface.co/docs/transformers/en/kv_cache)
+
+## What each integration provides
+
+| Component | Responsibility |
 | --- | --- |
-| Find a method | A list of available variants for the selected backbone and the model revisions on which each was checked. |
-| Load a method | A named implementation and an example configuration with its cache-specific settings, such as block size or refresh interval. |
-| Generate | A model adapter that applies the method during denoising, preserves compatible sampler settings, and starts each request with fresh cache state. |
-| Switch or compare | The same generation entry point for the baseline and other compatible methods. If a method needs a particular sampler, expose that requirement before the run. |
+| Cache method | Defines the reusable rule, its configuration, and the step or layer information needed to choose which states to refresh. A custom engine can import that decision logic directly. |
+| Model and runtime adapter | Receives that information from a specific loop, runs the required model operations, preserves masks and position IDs, and reads or writes the runtime's cache layout. Binds state to one request and releases it on completion or cancellation. |
+| Host generation loop | Supplies step or layer information where the method needs it and retains ownership of token selection, sampling, batching, and stopping. A custom loop can call the adapter directly. |
 
-For example, dKV-Cache-Greedy's LLaDA implementation requires a random unmasking order. That capability belongs in the method entry so a team using confidence-based unmasking can see which choices fit its pipeline. [Greedy method page](methods/dkv-cache.md#greedy)
+An adapter may use a native hook when it exposes the required information in time. For example, Dream's published `diffusion_generate` loop calls the model **before** its logits hook. Skipping computation on that step requires an integration at or before the forward call. A serving runtime such as vLLM would need its own integration with the runner's per-request block tables and slot mappings. These are candidate integration points for future work. [Dream sampling loop](https://huggingface.co/Dream-org/Dream-v0-Instruct-7B/blob/05334cb9faaf763692dcf9d8737c642be2b2a6ae/generation_utils.py#L408-L415) · [vLLM attention backend](https://docs.vllm.ai/en/stable/api/vllm/v1/attention/backend/)
 
-## What ships with an integrated method
-
-- One method name per selectable variant, with the authors’ paper, implementation revision, and applicable license notices.
-- An implementation reachable through the shared entry point, plus the compatible backbone, checkpoint revision, and sampler requirements.
-- A minimal example and a reusable configuration stating the method parameters. A team should be able to start with its own prompts.
-- A correctness check for the supported model and a link to matched measurements when available. In the method table, label upstream examples, Zoo examples, and measured results by their origin.
+Advertise support for a **method, model revision, and runtime integration** together. Each supported combination should link the method's paper and implementation revision, applicable license notices, a minimal host-side example, a reusable configuration, and the checks run on that path. Report sampler restrictions before inference and link matched measurements when available. [Example of a sampler restriction](methods/dkv-cache.md#greedy)
 
 ## Proposed first release
 
-Start with **one backbone and two switchable cache methods**. LLaDA-8B-Instruct and the prefix and dual variants of Fast-dLLM v1 are the initial candidates because the authors already expose full, prefix, and dual generation for the same checkpoint. The release milestone is a fresh user running all three settings from one example with the same prompt. Publishing a paired result would show what the switch costs in throughput, memory, and answer quality. [Upstream three-way selection](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/chat.py#L49-L56) · [Comparison protocol](benchmarking.md)
-
-One subsequent integration on LLaDA can test whether the interface accommodates a different refresh rule. Porting an existing method to Dream can test whether a second backbone can share the same method selection. [Current method collection](../README.md#method-zoo) · [Maintainer workflow](maintaining.md)
+Start with the LLaDA-8B-Instruct PyTorch loop and two switchable methods, Fast-dLLM Prefix and Dual. The release example should show the exact change to the upstream loop. Verify the cache-off path against native LLaDA, then verify Prefix and Dual against their respective pinned Fast-dLLM paths under matched settings. Include a block transition and successive requests so stale cache state would be visible. Dream and serving engines become supported only when their own adapters have a runnable example and parity checks. [Upstream three-way selection](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/chat.py#L49-L56) · [Comparison protocol](benchmarking.md)

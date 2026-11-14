@@ -1,8 +1,8 @@
 # dLLM Cache Zoo
 
-A collection of **KV cache methods for diffusion language models**. The goal is to let you load a method by name into your own inference pipeline and switch methods while keeping the same model, prompts, and generation settings.
+A collection of **KV cache methods for diffusion language models**. The goal is to select a method by name inside the generation loop you already use. A model- and runtime-specific adapter will handle the cache updates while your sampler chooses which tokens to reveal.
 
-**The collection is in development.** Today you can use the authors’ implementations through the model-specific examples below. The shared Zoo interface is planned.
+**The collection is in development.** The examples below run in the authors’ repositories. The first proposed Zoo adapter targets LLaDA's PyTorch denoising loop with a checkpoint loaded through Transformers. [Integration design](docs/project.md)
 
 ## Method zoo
 
