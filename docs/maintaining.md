@@ -2,11 +2,11 @@
 
 ## A one-person workflow
 
-Keep the current milestone in the [project roadmap](project.md) and use Issues as the queue. Work on one integration at a time. A reference entry, a model integration, and its measured result can land independently, so a paper correction never has to wait for GPU access.
+Track the next usable method or model configuration in Issues. Work on one integration at a time, and update the method page alongside it. A team should be able to adopt an integrated method as soon as its example works. Measurements and support for another checkpoint can follow independently. [First release target](project.md#proposed-first-release)
 
 | When | Maintainer action |
 | --- | --- |
-| During triage | Group duplicate requests. Prefer a concrete downstream use case, an identifiable upstream revision, and a comparison that fits the available hardware. Point a scoped literature-only contribution to the catalog. |
+| During triage | Group requests for the same method. Look for the checkpoint a team uses, a pinned upstream example, and the smallest change that would let that team use the method. |
 | For each change | Use a short-lived branch and one focused pull request. State the effect on a researcher, link its evidence, and review the diff after checks pass. A solo maintainer can merge their own reviewed PR. |
 | When a source changes | Compare the new revision with the pinned one. Update the affected entry and its evidence in one PR. Tie existing benchmark artifacts to the revision originally measured. |
 | Monthly | Review grouped dependency proposals and prioritize reproducibility reports. Check which integrations teams have asked for or linked from downstream repositories. Stars and clones are useful signals of discovery. A reported reproduction or downstream use helps choose what to maintain. |
@@ -21,4 +21,4 @@ GitHub Actions checks the Markdown and its local links and installs the locked d
 
 ## Helping another team adopt it
 
-Each integrated policy should have one page a team can send to a colleague. It should include the minimal example, the checkpoint it works with, and a matched baseline result when available. A paper author can contribute a source-backed entry before an adapter exists. GitHub generates a citation from the repository metadata. Experiments using a specific policy should also credit its paper and upstream implementation. [Citation metadata](../CITATION.cff) · [Contribution guide](../CONTRIBUTING.md)
+Each integrated method should have one page a team can send to a colleague. Include the minimal example, the checkpoint it works with, and a matched baseline result when available. Credit the method authors alongside the implementation. [Citation metadata](../CITATION.cff) · [Contribution guide](../CONTRIBUTING.md)

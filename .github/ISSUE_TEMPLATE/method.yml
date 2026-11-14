@@ -1,5 +1,5 @@
-name: Suggest a cache policy
-description: Propose a source-backed catalog entry or a model integration.
+name: Suggest a cache method or model
+description: Request a method, an additional checkpoint, or a correction to a method page.
 title: "[Method] "
 labels: ["enhancement"]
 body:
@@ -8,15 +8,15 @@ body:
     attributes:
       label: What would you like to contribute?
       options:
-        - Catalog reference
-        - Model integration proposal
-        - Correction to an existing entry
+        - Add a cache method
+        - Support a method on another model
+        - Add or correct an upstream example
     validations:
       required: true
   - type: input
     id: policy
     attributes:
-      label: Policy and model
+      label: Method, variant, and checkpoint
       placeholder: e.g. Fast-dLLM v1 prefix on LLaDA-8B-Instruct
     validations:
       required: true
@@ -24,13 +24,13 @@ body:
     id: evidence
     attributes:
       label: Primary evidence
-      description: Link the paper, official code revision if available, and any license you found.
+      description: Link the paper, the authors' example or implementation revision, and any license you found.
     validations:
       required: true
   - type: textarea
     id: use
     attributes:
-      label: Reuse rule or use case
-      description: What state does it reuse, or what comparison would this enable for your project?
+      label: How would you use this method?
+      description: Describe the pipeline it should work in and any sampler or cache setting that matters.
     validations:
       required: true

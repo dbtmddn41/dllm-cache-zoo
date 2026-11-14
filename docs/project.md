@@ -1,38 +1,29 @@
-# Project scope and roadmap
+# Library design
 
-## The researcher's task
+The Zoo will ship implementations of named KV cache methods for diffusion language models. A team should be able to discover the methods available for its checkpoint, load one into its existing generation script, and switch to a second method by changing the selection. Today's directory points to the authors’ implementations. The behaviors below describe the intended library.
 
-A team already evaluates a masked diffusion language model on its own prompts. It wants to try a cache policy, preserve its sampler and scoring code, and learn whether saved computation is worth any change in answer quality. The intended library will let that team select a policy in Python and export enough information to reproduce the comparison. A paper author should also be able to contribute one policy and reuse the same evaluation path.
+## What a researcher should be able to do
 
-The initial scope is inference-time reuse of attention keys and values across denoising steps in text diffusion models. Methods that also reuse other activations should identify them. The first model target is LLaDA-8B-Instruct. Dream is a candidate for testing which parts of the interface transfer. Training, multimodal generation, autoregressive serving, and a hosted leaderboard are outside the first milestone. [LLaDA model card](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) · [First reference policy](methods.md#fast-dllm-v1-prefix)
+Suppose a team already runs prompts through LLaDA-8B-Instruct. It first selects full recomputation, then Fast-dLLM prefix caching, then dual caching. Across all three runs it keeps its model, prompt formatting, generation settings, and scoring code. The method selection determines which positions are recomputed. The team can save that choice and its parameters with its experiment, or import the same method into a different project.
 
-## Where the integration boundaries belong
-
-| Proposed component | Responsibility | An example decision it owns |
-| --- | --- | --- |
-| Model adapter | Run the backbone, maintain position and attention-mask semantics, and reset request-local state | Map a refresh of positions 8–11 to the correct key and value slots |
-| Cache policy | Choose what to retain or refresh for this request and step | Refresh every position when entering a new block |
-| Sampler | Choose tokens and positions to unmask and decide when to stop | Reveal a fixed number of high-confidence tokens |
-| Evaluation runner | Pair inputs and seeds, time both arms, score outputs, and export the manifest | Compute accuracy and latency from the same list of example IDs |
-
-A team using only the adapter and a policy should be able to keep its own runner. The first baseline and cache policy will exercise these boundaries before the public API is settled.
-
-## How to read a support claim
-
-| Status | What a reader can verify |
+| Operation | What the library should provide |
 | --- | --- |
-| Reference | A description, paper, and specific upstream code revision appear in the catalog. |
-| Integrated | The Zoo has a runnable example for a named model revision, configuration, and a correctness check. |
-| Benchmarked | A paired result links the configuration, per-example records, scoring rule, and environment. |
+| Find a method | A list of available variants for the selected backbone and the model revisions on which each was checked. |
+| Load a method | A named implementation and an example configuration with its cache-specific settings, such as block size or refresh interval. |
+| Generate | A model adapter that applies the method during denoising, preserves compatible sampler settings, and starts each request with fresh cache state. |
+| Switch or compare | The same generation entry point for the baseline and other compatible methods. If a method needs a particular sampler, expose that requirement before the run. |
 
-Integration and benchmark status apply to a **policy and model pair**. An upstream Dream example alone establishes a reference for Dream. Each measured claim should identify the pair it covers.
+For example, dKV-Cache-Greedy's LLaDA implementation requires a random unmasking order. That capability belongs in the method entry so a team using confidence-based unmasking can see which choices fit its pipeline. [Greedy method page](methods/dkv-cache.md#greedy)
 
-## First milestones
+## What ships with an integrated method
 
-| Order | Deliverable | Completion evidence |
-| --- | --- | --- |
-| 1 | LLaDA full-recomputation reference | A pinned model and tokenizer, an offline or small fixture for routine checks, and a deterministic run matching the upstream baseline on named prompts. |
-| 2 | Fast-dLLM v1 prefix on the same LLaDA path | A research script can select either policy. Tests cover block boundaries, successive requests, and a configuration that refreshes all states. An upstream comparison records any intentional differences. |
-| 3 | First public paired comparison | A GSM8K pilot with fixed example IDs, one configuration, raw records, and a table of quality, latency, throughput, and peak memory. A fresh environment can regenerate the table. |
+- One method name per selectable variant, with the authors’ paper, implementation revision, and applicable license notices.
+- An implementation reachable through the shared entry point, plus the compatible backbone, checkpoint revision, and sampler requirements.
+- A minimal example and a reusable configuration stating the method parameters. A team should be able to start with its own prompts.
+- A correctness check for the supported model and a link to matched measurements when available. In the method table, label upstream examples, Zoo examples, and measured results by their origin.
 
-After the first comparison, candidate additions are dual caching on LLaDA and the prefix policy on Dream. The first isolates a different reuse region. The second tests portability. A downstream use case or reproduction report can guide the order. [Benchmark protocol](benchmarking.md) · [Maintainer workflow](maintaining.md)
+## Proposed first release
+
+Start with **one backbone and two switchable cache methods**. LLaDA-8B-Instruct and the prefix and dual variants of Fast-dLLM v1 are the initial candidates because the authors already expose full, prefix, and dual generation for the same checkpoint. The release milestone is a fresh user running all three settings from one example with the same prompt. Publishing a paired result would show what the switch costs in throughput, memory, and answer quality. [Upstream three-way selection](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/chat.py#L49-L56) · [Comparison protocol](benchmarking.md)
+
+One subsequent integration on LLaDA can test whether the interface accommodates a different refresh rule. Porting an existing method to Dream can test whether a second backbone can share the same method selection. [Current method collection](../README.md#method-zoo) · [Maintainer workflow](maintaining.md)

@@ -1,14 +1,14 @@
 # Contributing
 
-The easiest first contribution is a **method reference**. A researcher who knows a paper can document its cache rule and point readers to the exact upstream implementation. Small corrections to a method description or model claim are welcome.
+Contributions can bring a new cache method into the Zoo or add a model configuration to an existing method. During the design phase, a concrete upstream example helps us work out what the shared interface must support.
 
 ## Add or correct a method
 
-1. Look for the policy in the [catalog](docs/methods.md). Identify a specific variant, the model family, and the positions or layers whose states it reuses.
-2. Edit the summary row and the corresponding entry. Describe how the cache is populated and refreshed, name the knobs that affect comparisons, and link the paper, an upstream commit permalink, and the license evidence. If the license is unspecified, record that observation and link to the revision.
-3. Open a focused pull request. Explain which claim a reader can verify from each source. Use **Reference** for a literature entry. The [project scope](docs/project.md) describes the evidence for stronger status claims.
+1. Check the [method table](README.md#method-zoo) for the family and variant. Start from a concrete combination, such as dKV-Cache-Decode on LLaDA-8B-Instruct.
+2. Add a variant to its family page or create a page under `docs/methods/`. Follow the Fast-dLLM page as an example. Describe what gets reused, how to select the method, the settings that affect behavior, and any sampler or batch-size requirement. Link the paper, a pinned implementation, an example for the exact checkpoint, and its license evidence. [Example method page](docs/methods/fast-dllm.md)
+3. Link the variant in the README and the example in the [checkpoint index](docs/methods.md). A link to an author-maintained implementation belongs in an upstream example column. A Zoo integration should link its own importable method, example configuration, and tested checkpoint.
 
-For an integration proposal, describe a real downstream use case, the baseline, and the smallest runnable example that would establish support. A benchmark contribution should include the paired settings and raw records described in the [benchmark protocol](docs/benchmarking.md).
+For an integration proposal, describe how a team would switch from the baseline to your method in its existing pipeline. If the method needs a different sampler or a model-specific hook, say where the change occurs. Measured comparisons can be contributed independently. [Library design](docs/project.md) · [Benchmark protocol](docs/benchmarking.md)
 
 ## Set up a working copy
 

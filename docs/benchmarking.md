@@ -1,6 +1,6 @@
 # Comparing cache policies
 
-The first proposed experiment asks how enabling prefix caching affects LLaDA-8B-Instruct on the **same math questions with the same decoding rule**. The baseline runs a full forward pass on every denoising step. The comparison arm reuses the Fast-dLLM v1 prefix within each block. [LLaDA model](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) · [GSM8K dataset and answer format](https://github.com/openai/grade-school-math) · [Reference policy](methods.md#fast-dllm-v1-prefix)
+Use this protocol when reporting the effect of switching cache methods in the Zoo. For example, on LLaDA-8B-Instruct a team can compare full recomputation, prefix caching, and dual caching on the same GSM8K questions. Each cache run shares the baseline's prompts and decoding rule. [LLaDA model](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) · [GSM8K dataset and answer format](https://github.com/openai/grade-school-math) · [Fast-dLLM settings](methods/fast-dllm.md#select-a-variant-upstream)
 
 ## Pair the runs
 
@@ -11,7 +11,7 @@ The first proposed experiment asks how enabling prefix caching affects LLaDA-8B-
 
 ## Read the numbers
 
-| Measure | Definition for the first comparison |
+| Measure | Definition |
 | --- | --- |
 | Answer accuracy | Correct / attempted on the same IDs. For GSM8K, compare the normalized final numeric answer with the reference. Fix the extraction and normalization rules in advance. Count missing answers as incorrect and give the numerator and denominator. |
 | Generation latency | Wall time from input tensors ready on device through the final synchronized generation step. Include cache construction, refreshes, and token selection. Give median batch latency over repeated runs, with batch size and spread. Report cold loading or tokenization separately if timed. |

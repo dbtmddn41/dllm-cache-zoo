@@ -1,25 +1,25 @@
 # dLLM Cache Zoo
 
-A field guide to key–value (KV) cache policies for diffusion language models, and a project to make those policies interchangeable in an existing research pipeline.
+A collection of **KV cache methods for diffusion language models**. The goal is to let you load a method by name into your own inference pipeline and switch methods while keeping the same model, prompts, and generation settings.
 
-**The project is in its design phase.** You can compare what four policies reuse, read their papers, and jump to a specific revision of each official implementation. The first planned integration pairs LLaDA-8B-Instruct with a full-recomputation baseline and Fast-dLLM v1 prefix caching.
+**The collection is in development.** Today you can use the authors’ implementations through the model-specific examples below. The shared Zoo interface is planned.
 
-## Compare two policies
+## Method zoo
 
-Consider a masked diffusion model filling in the middle block of a response. Attention spans the **prompt and finished blocks**, the **active block**, and the **future masked blocks**, in that order.
+| Method | What it reuses between denoising steps | LLaDA example | Dream example |
+| --- | --- | --- | --- |
+| [Fast-dLLM v1 · Prefix](docs/methods/fast-dllm.md#prefix-cache) | Prompt and completed blocks before the active block | [Chat](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/chat.py#L49-L56) | [Evaluation recipe](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/dream/eval.md#L38-L47) |
+| [Fast-dLLM v1 · Dual](docs/methods/fast-dllm.md#dual-cache) | Both sides of the active block, including the masked suffix | [Chat](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/chat.py#L49-L56) | [Parallel decoding recipe](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/dream/eval.md#L65-L75) |
+| [dKV-Cache · Decode](docs/methods/dkv-cache.md#decode) | Previously decoded positions after a one-step delay | [Generation example](https://github.com/horseee/dKV-Cache/blob/49a76fcc43b744ec2d960137f216e419317138b1/README.md#L87-L128) | [Generation example](https://github.com/horseee/dKV-Cache/blob/49a76fcc43b744ec2d960137f216e419317138b1/README.md#L26-L75) |
+| [dKV-Cache · Greedy](docs/methods/dkv-cache.md#greedy) | Positions outside a small update set chosen from the decoding order | [Generation example](https://github.com/horseee/dKV-Cache/blob/49a76fcc43b744ec2d960137f216e419317138b1/README.md#L130-L135) | — |
+| [dLLM-Cache](docs/methods/dllm-cache.md) | Prompt and response states on separate schedules, with selective response updates | [Demo](https://github.com/maomaocun/dLLM-cache/blob/17235bffc8c5b587a2dc6f7dc76fcd01eab76e3a/demo_LLaDA.py) | [Demo](https://github.com/maomaocun/dLLM-cache/blob/17235bffc8c5b587a2dc6f7dc76fcd01eab76e3a/demo_Dream.py) |
 
-| Policy | At the start of a block | On later steps in the same block |
-| --- | --- | --- |
-| Full recomputation | Compute all three regions | Compute all three again |
-| Fast-dLLM v1 prefix | Compute all three regions | Reuse the prefix. Recompute the active block and the suffix. |
-| Fast-dLLM v1 dual | Compute all three regions | Reuse the prefix and suffix. Recompute the active block. |
+Each model link opens an example at a fixed upstream revision. A dash means we have yet to identify an example for that combination. For the exact model IDs, [browse by checkpoint](docs/methods.md).
 
-The suffix can change its internal representation while its input tokens are still masked. Reusing it saves computation and can change the generated answer. A useful comparison therefore needs both elapsed time and task accuracy. [Authors’ LLaDA implementation](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/generate.py)
+## Try a method with your model
 
-## Use the project
+For **LLaDA-8B-Instruct**, the Fast-dLLM chat example already offers a useful three-way switch. The default runs full recomputation. In the same script, `--use_cache` selects prefix caching, and adding `--if_cache_position` selects dual caching. Use the same block size and decoding threshold across the three runs. The method page links the authors’ setup instructions and explains the corresponding Dream settings. [Fast-dLLM method page](docs/methods/fast-dllm.md)
 
-- **Choosing a method?** Find the reuse rule, refresh rule, supported upstream model families, paper, code, and licensing notes in the [method catalog](docs/methods.md).
-- **Designing an experiment?** Use the same prompts and decoding rules in both arms. The [benchmark protocol](docs/benchmarking.md) defines the controls, metrics, and evidence to publish.
-- **Building on the Zoo?** Read the [project scope and first milestones](docs/project.md). A method reference is a useful first contribution and takes one Markdown edit. [Contribution guide](CONTRIBUTING.md)
+Developing a cache method? The contribution guide describes how a method and its model configuration fit into the collection. [Contribute a method](CONTRIBUTING.md) · [Library design](docs/project.md) · [Comparison protocol](docs/benchmarking.md)
 
-Original project materials are available under Apache-2.0. The catalog links each method to its authors. GitHub’s **Cite this repository** menu provides a software citation. [License](LICENSE) · [Citation metadata](CITATION.cff)
+The Zoo's own materials are licensed under Apache-2.0. Each method page credits its authors and records the upstream license. [License](LICENSE) · [Cite the Zoo](CITATION.cff)
