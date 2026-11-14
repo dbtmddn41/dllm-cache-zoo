@@ -19,4 +19,6 @@ Keep the prefix and the suffix from the block's first pass. In the same three-bl
 
 The LLaDA chat script defaults to full recomputation. Hold the checkpoint, block size, step budget, and token-transfer rule fixed when switching among the three settings. On Dream, compare the authors’ *Prefix Cache + Parallel* and *Dual Cache + Parallel* recipes to keep the confidence threshold and denoising budget matched. [Dream comparison settings](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/dream/eval.md#L57-L72) · [Authors’ LLaDA results](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/README.md#L104-L116)
 
+Fast-dLLM v2 is a separate block diffusion model with its own cache. [Block diffusion caches](block-diffusion.md#fast-dllm-v2-sub-block-cache)
+
 The linked LLaDA implementation carries an Apache-2.0 header. [Upstream license](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/LICENSE) · [All methods](../../README.md#method-zoo)
