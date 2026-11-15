@@ -8,6 +8,18 @@ Jiang et al. choose, at every decoding step, a small set of positions whose keys
 
 The method reads attention weights, so the authors require the eager attention implementation. Include that requirement in the baseline when timing the method, because the attention implementation also changes the cost of full recomputation. [Attention requirement](https://github.com/Kamichanw/d2Cache/blob/79fb5f64864389ba093c29122a21ef0391080312/docs/kv_caching.md#L133-L134)
 
+## Use it from the Zoo
+
+```python
+cache = zoo.attach(model, "d2cache", rollout_p=0.1, current_k=32, sigma=10.0, inflate_w=0)
+```
+
+The settings are the authors', with the defaults of their shipped configuration. Pass the block being decoded as `active`: its masked positions are always among those the step runs. The first pass of a generation runs the whole sequence, and the cache is not rebuilt at block boundaries. Every pass uses eager attention, because the method reads attention weights. Certainty-prior decoding is a sampler choice and is left to the host. [Policy](../../src/dllm_cache_zoo/methods/d2cache.py)
+
+The policy is a port of the authors' cache. On LLaDA-8B-Instruct in float32 it runs the same positions as theirs at every step of every checked prompt. In bfloat16 the positions overlap by 96% on average, because the ranking falls on near ties in half precision, and the logits pick the same token for 380 of 381 revealed positions. [Check report](../checks.md#step-by-step-replay)
+
+Two things differ from the pinned revision. The reference never updates its stored confidence after the first pass: an expression meant as `a & (b == c)` is written `a & b == c`, and the assignment goes to a copy. The Zoo stores the new confidence of the masked positions each step ran, which is what the paper describes, and `refresh_confidence=False` reproduces the reference. The pinned revision also asserts on its first step, because it switches to its decode state before it checks for a query mask. The revision before it had a guard there. [Stored confidence in the reference](https://github.com/Kamichanw/d2Cache/blob/79fb5f64864389ba093c29122a21ef0391080312/src/cache/d2cache.py#L160-L170)
+
 ## Select the method upstream
 
 | Checkpoint in the authors’ example | Decoding | Settings in the example | Entry point |

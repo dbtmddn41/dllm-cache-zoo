@@ -11,4 +11,14 @@ Liu et al. use different refresh schedules for the prompt and the generated resp
 
 Both demos set the prompt refresh interval to **100 steps**, the response refresh interval to **7 steps**, and the transfer ratio to **0.25**. These are the authors’ demo settings. When changing the ratio, hold the two intervals fixed so you can attribute any change to the fraction of response positions updated. [LLaDA demo settings](https://github.com/maomaocun/dLLM-cache/blob/17235bffc8c5b587a2dc6f7dc76fcd01eab76e3a/demo_LLaDA.py#L10-L43) · [Configuration fields](https://github.com/maomaocun/dLLM-cache/blob/17235bffc8c5b587a2dc6f7dc76fcd01eab76e3a/dllm_cache/cache/Config.py)
 
+## Use it from the Zoo
+
+```python
+cache = zoo.attach(model, "dllm-cache", prompt_interval=100, response_interval=7, transfer_ratio=0.25)
+```
+
+`prompt_interval` and `response_interval` are the refresh periods in steps, counted over the whole generation, and `transfer_ratio` is the share of response positions each layer updates on the steps between response refreshes. The defaults are the authors' demo settings. The first layer is recomputed in full at every step, as in the reference. The method does not use blocks, so `active` only tells the sampler's span. [Policy](../../src/dllm_cache_zoo/methods/dllm_cache.py)
+
+The cache state belongs to the request, where the reference keeps one object for the whole process. Logits are returned for the response positions. On LLaDA-8B-Instruct the policy reveals the same tokens as the authors' hooks on every checked prompt, with the demo settings, with intervals of 5 and 3, and with the adaptive update turned off. [Check report](../checks.md)
+
 The authors provide installation instructions and separate evaluation recipes. Their repository carries an Apache-2.0 license. [Setup and evaluation](https://github.com/maomaocun/dLLM-cache/blob/17235bffc8c5b587a2dc6f7dc76fcd01eab76e3a/README.md#L25-L62) · [Upstream license](https://github.com/maomaocun/dLLM-cache/blob/17235bffc8c5b587a2dc6f7dc76fcd01eab76e3a/LICENSE) · [All methods](../../README.md#method-zoo)
