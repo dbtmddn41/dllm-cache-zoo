@@ -1,0 +1,195 @@
+{
+  "case": "fast-dllm-v2",
+  "model": "Efficient-Large-Model/Fast_dLLM_v2_7B",
+  "dtype": "bfloat16",
+  "torch": "2.9.1+cu128",
+  "zoo": "0.1.0.dev0",
+  "results": [
+    {
+      "prompt": 0,
+      "dtype": "bfloat16",
+      "logit_scale": 35.25,
+      "max_abs_logit_diff": {
+        "none": 0.0,
+        "block-cache": 0.3125,
+        "fast-dllm-v2-sub-block": 0.3125
+      },
+      "runs": {
+        "none": {
+          "method": "none",
+          "threshold": 1.0,
+          "reference_tokens": 105,
+          "zoo_tokens": 104,
+          "compared": 104,
+          "same": 81,
+          "zoo_steps": 104,
+          "recomputed_share": 1.0
+        },
+        "block-cache": {
+          "method": "block-cache",
+          "threshold": 1.0,
+          "reference_tokens": 105,
+          "zoo_tokens": 104,
+          "compared": 104,
+          "same": 104,
+          "zoo_steps": 104,
+          "recomputed_share": 0.26119402985074625
+        },
+        "block-cache-th": {
+          "method": "block-cache",
+          "threshold": 0.9,
+          "reference_tokens": 105,
+          "zoo_tokens": 104,
+          "compared": 104,
+          "same": 104,
+          "zoo_steps": 47,
+          "recomputed_share": 0.26229508196721313
+        },
+        "sub-block": {
+          "method": "fast-dllm-v2-sub-block",
+          "threshold": 1.0,
+          "reference_tokens": 105,
+          "zoo_tokens": 104,
+          "compared": 104,
+          "same": 104,
+          "zoo_steps": 104,
+          "recomputed_share": 0.09701492537313433
+        },
+        "sub-block-th": {
+          "method": "fast-dllm-v2-sub-block",
+          "threshold": 0.9,
+          "reference_tokens": 105,
+          "zoo_tokens": 104,
+          "compared": 104,
+          "same": 104,
+          "zoo_steps": 46,
+          "recomputed_share": 0.1384180790960452
+        }
+      }
+    },
+    {
+      "prompt": 1,
+      "dtype": "bfloat16",
+      "logit_scale": 29.0,
+      "max_abs_logit_diff": {
+        "none": 0.625,
+        "block-cache": 0.625,
+        "fast-dllm-v2-sub-block": 0.625
+      },
+      "runs": {
+        "none": {
+          "method": "none",
+          "threshold": 1.0,
+          "reference_tokens": 90,
+          "zoo_tokens": 90,
+          "compared": 90,
+          "same": 90,
+          "zoo_steps": 90,
+          "recomputed_share": 1.0
+        },
+        "block-cache": {
+          "method": "block-cache",
+          "threshold": 1.0,
+          "reference_tokens": 90,
+          "zoo_tokens": 90,
+          "compared": 90,
+          "same": 90,
+          "zoo_steps": 90,
+          "recomputed_share": 0.3488372093023256
+        },
+        "block-cache-th": {
+          "method": "block-cache",
+          "threshold": 0.9,
+          "reference_tokens": 90,
+          "zoo_tokens": 90,
+          "compared": 90,
+          "same": 90,
+          "zoo_steps": 81,
+          "recomputed_share": 0.3446808510638298
+        },
+        "sub-block": {
+          "method": "fast-dllm-v2-sub-block",
+          "threshold": 1.0,
+          "reference_tokens": 82,
+          "zoo_tokens": 90,
+          "compared": 82,
+          "same": 44,
+          "zoo_steps": 90,
+          "recomputed_share": 0.14244186046511628
+        },
+        "sub-block-th": {
+          "method": "fast-dllm-v2-sub-block",
+          "threshold": 0.9,
+          "reference_tokens": 82,
+          "zoo_tokens": 90,
+          "compared": 82,
+          "same": 44,
+          "zoo_steps": 80,
+          "recomputed_share": 0.1476293103448276
+        }
+      }
+    },
+    {
+      "prompt": 2,
+      "dtype": "bfloat16",
+      "logit_scale": 26.375,
+      "max_abs_logit_diff": {
+        "none": 0.25,
+        "block-cache": 0.25,
+        "fast-dllm-v2-sub-block": 0.25
+      },
+      "runs": {
+        "none": {
+          "method": "none",
+          "threshold": 1.0,
+          "reference_tokens": 98,
+          "zoo_tokens": 97,
+          "compared": 97,
+          "same": 96,
+          "zoo_steps": 97,
+          "recomputed_share": 1.0
+        },
+        "block-cache": {
+          "method": "block-cache",
+          "threshold": 1.0,
+          "reference_tokens": 98,
+          "zoo_tokens": 97,
+          "compared": 97,
+          "same": 96,
+          "zoo_steps": 97,
+          "recomputed_share": 0.3356401384083045
+        },
+        "block-cache-th": {
+          "method": "block-cache",
+          "threshold": 0.9,
+          "reference_tokens": 98,
+          "zoo_tokens": 97,
+          "compared": 97,
+          "same": 96,
+          "zoo_steps": 53,
+          "recomputed_share": 0.31176470588235294
+        },
+        "sub-block": {
+          "method": "fast-dllm-v2-sub-block",
+          "threshold": 1.0,
+          "reference_tokens": 98,
+          "zoo_tokens": 97,
+          "compared": 97,
+          "same": 97,
+          "zoo_steps": 97,
+          "recomputed_share": 0.13581314878892733
+        },
+        "sub-block-th": {
+          "method": "fast-dllm-v2-sub-block",
+          "threshold": 0.9,
+          "reference_tokens": 98,
+          "zoo_tokens": 97,
+          "compared": 97,
+          "same": 97,
+          "zoo_steps": 53,
+          "recomputed_share": 0.15294117647058825
+        }
+      }
+    }
+  ]
+}

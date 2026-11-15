@@ -1,0 +1,42 @@
+{
+  "case": "d2cache",
+  "model": "GSAI-ML/LLaDA-8B-Instruct",
+  "dtype": "float32",
+  "settings": {
+    "rollout_p": 0.1,
+    "current_k": 32,
+    "sigma": 10.0,
+    "inflate_w": 0
+  },
+  "torch": "2.9.1+cu128",
+  "zoo": "0.1.0.dev0",
+  "results": [
+    {
+      "prompt": 0,
+      "steps": 128,
+      "same_positions": 128,
+      "mean_iou": 1.0,
+      "revealed": 127,
+      "same_token": 127,
+      "recomputed_share": 0.1975194209039548
+    },
+    {
+      "prompt": 1,
+      "steps": 128,
+      "same_positions": 128,
+      "mean_iou": 1.0,
+      "revealed": 127,
+      "same_token": 127,
+      "recomputed_share": 0.2199399834437086
+    },
+    {
+      "prompt": 2,
+      "steps": 128,
+      "same_positions": 128,
+      "mean_iou": 1.0,
+      "revealed": 127,
+      "same_token": 127,
+      "recomputed_share": 0.22171160130718953
+    }
+  ]
+}

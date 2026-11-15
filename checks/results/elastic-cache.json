@@ -1,0 +1,62 @@
+{
+  "case": "elastic-cache",
+  "model": "GSAI-ML/LLaDA-8B-Instruct",
+  "torch": "2.9.1+cu128",
+  "zoo": "0.1.0.dev0",
+  "results": [
+    {
+      "case": "elastic-cache",
+      "prompt": 0,
+      "settings": {
+        "gen_length": 128,
+        "window_length": 16,
+        "threshold": 0.9,
+        "gamma": 0.9,
+        "track_num": 1,
+        "block_caching": true
+      },
+      "upstream_steps": 49,
+      "zoo_steps": 49,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.2352127291594604
+    },
+    {
+      "case": "elastic-cache",
+      "prompt": 1,
+      "settings": {
+        "gen_length": 128,
+        "window_length": 16,
+        "threshold": 0.9,
+        "gamma": 0.9,
+        "track_num": 1,
+        "block_caching": true
+      },
+      "upstream_steps": 116,
+      "zoo_steps": 116,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.18077043845626856
+    },
+    {
+      "case": "elastic-cache",
+      "prompt": 2,
+      "settings": {
+        "gen_length": 128,
+        "window_length": 16,
+        "threshold": 0.9,
+        "gamma": 0.9,
+        "track_num": 1,
+        "block_caching": true
+      },
+      "upstream_steps": 56,
+      "zoo_steps": 56,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.27142419467787116
+    }
+  ]
+}
