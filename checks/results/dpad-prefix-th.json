@@ -1,0 +1,74 @@
+{
+  "case": "dpad-prefix",
+  "model": "GSAI-ML/LLaDA-8B-Instruct",
+  "torch": "2.9.1+cu128",
+  "zoo": "0.1.0.dev0",
+  "results": [
+    {
+      "case": "dpad-prefix",
+      "prompt": 0,
+      "settings": {
+        "steps": 128,
+        "gen_length": 128,
+        "block_length": 32,
+        "temperature": 0.0,
+        "remasking": "low_confidence",
+        "threshold": 0.9,
+        "window": 128,
+        "k": 4.0,
+        "scale": 2.0,
+        "seed": 1234
+      },
+      "upstream_steps": 44,
+      "zoo_steps": 44,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.4138418079096045
+    },
+    {
+      "case": "dpad-prefix",
+      "prompt": 1,
+      "settings": {
+        "steps": 128,
+        "gen_length": 128,
+        "block_length": 32,
+        "temperature": 0.0,
+        "remasking": "low_confidence",
+        "threshold": 0.9,
+        "window": 128,
+        "k": 4.0,
+        "scale": 2.0,
+        "seed": 1234
+      },
+      "upstream_steps": 74,
+      "zoo_steps": 74,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.4606228745301593
+    },
+    {
+      "case": "dpad-prefix",
+      "prompt": 2,
+      "settings": {
+        "steps": 128,
+        "gen_length": 128,
+        "block_length": 32,
+        "temperature": 0.0,
+        "remasking": "low_confidence",
+        "threshold": 0.9,
+        "window": 128,
+        "k": 4.0,
+        "scale": 2.0,
+        "seed": 1234
+      },
+      "upstream_steps": 21,
+      "zoo_steps": 21,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.5256769374416433
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "case": "block-cache",
+  "model": "JetLM/SDAR-1.7B-Chat",
+  "torch": "2.8.0+cu128",
+  "zoo": "0.1.0.dev0",
+  "results": [
+    {
+      "prompt": 0,
+      "dtype": "float32",
+      "max_abs_diff_cache_vs_stock": 0.0001068115234375,
+      "max_abs_diff_cache_vs_uncached": 0.00011444091796875,
+      "max_abs_diff_uncached_vs_stock": 7.2479248046875e-05,
+      "logit_scale": 37.95523452758789,
+      "argmax_same": 128,
+      "argmax_total": 128,
+      "greedy_tokens_same": 0,
+      "greedy_tokens_total": 0,
+      "sampled_tokens_same": 0,
+      "sampled_tokens_total": 0
+    },
+    {
+      "prompt": 1,
+      "dtype": "float32",
+      "max_abs_diff_cache_vs_stock": 7.82012939453125e-05,
+      "max_abs_diff_cache_vs_uncached": 5.91278076171875e-05,
+      "max_abs_diff_uncached_vs_stock": 6.29425048828125e-05,
+      "logit_scale": 23.49702262878418,
+      "argmax_same": 136,
+      "argmax_total": 136,
+      "greedy_tokens_same": 0,
+      "greedy_tokens_total": 0,
+      "sampled_tokens_same": 0,
+      "sampled_tokens_total": 0
+    },
+    {
+      "prompt": 2,
+      "dtype": "float32",
+      "max_abs_diff_cache_vs_stock": 9.1552734375e-05,
+      "max_abs_diff_cache_vs_uncached": 9.5367431640625e-05,
+      "max_abs_diff_uncached_vs_stock": 4.57763671875e-05,
+      "logit_scale": 57.33709716796875,
+      "argmax_same": 128,
+      "argmax_total": 128,
+      "greedy_tokens_same": 0,
+      "greedy_tokens_total": 0,
+      "sampled_tokens_same": 0,
+      "sampled_tokens_total": 0
+    }
+  ]
+}

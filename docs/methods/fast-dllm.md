@@ -10,6 +10,18 @@ Keep keys and values for the prompt and all completed blocks. During refinement,
 
 Keep the prefix and the suffix from the block's first pass. In the same three-block example, only block two goes through the model on subsequent steps. A masked suffix token can change its hidden state when another position is revealed, so freezing the suffix can affect the final answer. Use multiple blocks when comparing the two variants so that at least one active block has a suffix. [LLaDA implementation](https://github.com/NVlabs/Fast-dLLM/blob/a9b81e4caa240c8cad4f7dc1889ff4852a0fca5b/v1/llada/generate.py#L210-L272)
 
+## Use it from the Zoo
+
+```python
+cache = zoo.attach(model, "fast-dllm-prefix")  # or "fast-dllm-dual"
+with cache.request(prompt_length=prompt_length) as state:
+    logits = state.forward(x, active=(block_start, block_end))
+```
+
+Neither variant has settings. Pass the block being decoded as `active`: the first call with a new span runs the whole sequence and rebuilds the store, and later calls run the block and suffix (Prefix) or the block alone (Dual). A loop with a single block caches only the prompt under Prefix. Confidence-aware parallel decoding is a sampler setting, `threshold` in the Zoo's reference loop. [Policies](../../src/dllm_cache_zoo/methods/fast_dllm.py) · [Reference loop](../../src/dllm_cache_zoo/loops.py)
+
+On LLaDA-8B-Instruct both variants reveal the same tokens as the authors' loops on every checked prompt, with a fixed step budget and with a confidence threshold of 0.9. The store keeps keys with rotary embeddings applied, where the reference stores them without and applies the embeddings at every step. The values that reach the attention are the same. [Check report](../checks.md)
+
 ## Select a variant upstream
 
 | Checkpoint in the authors’ example | Prefix | Dual | Entry point |
