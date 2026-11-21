@@ -6,6 +6,19 @@ Nguyen-Tri et al. use the model's own attention to decide when and where to refr
 
 `window_length` is the sliding window size. `gamma` is the threshold that triggers a cache update and `track_num` is the number of most-attended tokens that are watched. `block_caching` caches the masked positions far from the window. `threshold` belongs to confidence-aware decoding and is a decoding setting. Hold it fixed across the baseline and the cached run. [Parameters](https://github.com/VILA-Lab/Elastic-Cache/blob/1960d8fc6231205a1ae4ebba3898d475e339f7e1/README.md#L107-L116)
 
+## Use it from the Zoo
+
+```python
+from dllm_cache_zoo.loops import sliding_window_generate
+
+cache = zoo.attach(model, "elastic-cache", gamma=0.9, track_num=1, block_caching=True)
+out = sliding_window_generate(cache, prompt_ids, gen_length=512, window_length=16, threshold=0.9)
+```
+
+`gamma`, `track_num` and `block_caching` are the authors' settings. The sliding window and the confidence threshold belong to the loop: pass the window as `active`, from its first masked position to one past its last. The reference loop above is the authors' decoding without their cache. A blockwise loop works too, with the masked positions of the block as the window. The policy handles one sequence at a time, as the reference does. [Policy](../../src/dllm_cache_zoo/methods/elastic_cache.py) · [Reference loop](../../src/dllm_cache_zoo/loops.py)
+
+On LLaDA-8B-Instruct the policy reveals the same tokens in the same number of steps as the authors' implementation on every checked prompt. Two details differ. After an end-of-sequence token is revealed, the reference stops treating the masked positions behind it as masks when it picks the tokens to watch, and the Zoo keeps excluding every masked position. Attention weights are taken in float32 before they are cast back, where the reference stays in the model's dtype. [Check report](../checks.md)
+
 ## Select the method upstream
 
 | Checkpoint in the authors’ example | Settings in the example | Entry point |

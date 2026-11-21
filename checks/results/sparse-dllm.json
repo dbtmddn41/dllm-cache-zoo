@@ -1,0 +1,68 @@
+{
+  "case": "sparse-dllm",
+  "model": "GSAI-ML/LLaDA-8B-Instruct",
+  "torch": "2.9.1+cu128",
+  "zoo": "0.1.0.dev0",
+  "results": [
+    {
+      "case": "sparse-dllm",
+      "prompt": 0,
+      "settings": {
+        "steps": 128,
+        "gen_length": 128,
+        "block_length": 32,
+        "temperature": 0.0,
+        "cfg_scale": 0.0,
+        "remasking": "low_confidence",
+        "keep_ratio": 0.5,
+        "kernel_size": 3
+      },
+      "upstream_steps": null,
+      "zoo_steps": 128,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.2319915254237288
+    },
+    {
+      "case": "sparse-dllm",
+      "prompt": 1,
+      "settings": {
+        "steps": 128,
+        "gen_length": 128,
+        "block_length": 32,
+        "temperature": 0.0,
+        "cfg_scale": 0.0,
+        "remasking": "low_confidence",
+        "keep_ratio": 0.5,
+        "kernel_size": 3
+      },
+      "upstream_steps": null,
+      "zoo_steps": 128,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.26117549668874174
+    },
+    {
+      "case": "sparse-dllm",
+      "prompt": 2,
+      "settings": {
+        "steps": 128,
+        "gen_length": 128,
+        "block_length": 32,
+        "temperature": 0.0,
+        "cfg_scale": 0.0,
+        "remasking": "low_confidence",
+        "keep_ratio": 0.5,
+        "kernel_size": 3
+      },
+      "upstream_steps": null,
+      "zoo_steps": 128,
+      "response_tokens": 128,
+      "matching_tokens": 128,
+      "identical": true,
+      "recomputed_share": 0.25857843137254904
+    }
+  ]
+}
